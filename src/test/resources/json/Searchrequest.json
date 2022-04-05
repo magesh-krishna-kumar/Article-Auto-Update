@@ -1,0 +1,45 @@
+{
+  "CatalogOfferingsQueryRequest" : {
+    "CatalogOfferingsRequest" : [ {
+      "@type" : "CatalogOfferingsRequestAir",
+      "maxNumberOfOffersToReturn" : 200,
+      "offersPerPage" : 200,
+      "contentSourceList" : [ "GDS" ],
+      "returnBrandedFaresInd" : true,
+      "PassengerCriteria" : [ {
+        "number" : 4,
+        "passengerTypeCode" : "ADT"
+      } ],
+      "SearchCriteriaFlight" : [ {
+        "departureDate" : "2020-06-29",
+        "From" : {
+          "value" : "SYD"
+        },
+        "To" : {
+          "value" : "FRA"
+        }
+      } ],
+      "SearchModifiersAir" : {
+        "excludeGround" : "Train",
+        "FlightType" : {
+          "connectionType" : "DoubleConnection"
+        },
+        "CarrierPreference" : [ {
+          "type" : "Preferred",
+          "carriers" : [ "AA", "UA", "DL", "F9", "DI", "EK", "AF", "SQ", "BA", "QF", "CX", "QR", "LH", "AI", "PI", "QF", "NK", "VA" ]
+        } ],
+        "CabinPreference" : [ {
+          "type" : "Preferred",
+          "cabins" : [ "Business" ]
+        } ]
+      },
+      "PricingModifiersAir" : {
+        "@type" : "PricingModifiersAir",
+        "FareSelection" : {
+          "@type" : "FareSelectionDetail",
+          "fareType" : "PublicFaresOnly"
+        }
+      }
+    } ]
+  }
+}
