@@ -34,11 +34,11 @@ public class ArticleUpdate {
     List<ArticleStatus> articleStatusList=new ArrayList<ArticleStatus>();
     ChromeOptions chromeOptions = new ChromeOptions();
     driver = new ChromeDriver(chromeOptions);
-    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+   // driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     driver.get(
         articleUri);
     driver.manage().window().maximize();
-    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
     int size = driver.findElements(By.tagName("iframe")).size();
     driver.switchTo().frame("gsft_main");
     WebElement table =  driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_WEBELEMENT_TABLE));
