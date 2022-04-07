@@ -49,7 +49,7 @@ public class ArticleUpdateTest {
   }
   
   @Test
-  public void articleUpdateTest() throws Exception {
+  public void articleTest() throws Exception {
     String articleUri=ArticleUpdateConstant.FILTER_URL;
     ResourceBundle resourceBundle = ResourceBundle.getBundle("config/articledata");
      String[] teamData = resourceBundle.getString("Travelperformance").split("-");
