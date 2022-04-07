@@ -18,12 +18,12 @@
     <artifactId>json</artifactId>
     <version>20180813</version>
 </dependency>
-<dependency>
+<!-- <dependency>
   <groupId>com.google.guava</groupId>
   <artifactId>guava</artifactId>
   <version>31.1-jre</version>
-  <!-- or, for Android: -->
-</dependency>
+  or, for Android:
+</dependency> -->
 <dependency>
     <groupId>log4j</groupId>
     <artifactId>log4j</artifactId>
