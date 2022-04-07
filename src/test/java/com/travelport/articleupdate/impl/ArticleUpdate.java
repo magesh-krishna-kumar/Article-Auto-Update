@@ -12,16 +12,20 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import com.travelport.articleupdate.constant.ArticleUpdateConstant;
 import com.travelport.articleupdate.model.ArticleStatus;
+import com.travelport.articleupdate.model.ArticleUpdateData;
+import com.travelport.articleupdate.util.ArticleUpdateUtility;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class ArticleUpdate {
   
-  public static String updateArticle(String articleUri){
+  public static String updateArticle(String articleUri) throws ClassNotFoundException{
     String status="";
     WebDriver driver = null;
     WebDriverManager.chromedriver().setup();
+    ArticleUpdateData articleUpdateData=new ArticleUpdateData();
     List<ArticleStatus> articleStatusList=new ArrayList<ArticleStatus>();
     ChromeOptions chromeOptions = new ChromeOptions();
     driver = new ChromeDriver(chromeOptions);
@@ -32,7 +36,7 @@ public class ArticleUpdate {
     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     int size = driver.findElements(By.tagName("iframe")).size();
     driver.switchTo().frame("gsft_main");
-    WebElement table =  driver.findElement(By.xpath("/html/body/div[1]/div[1]/span/div/div[5]/table/tbody/tr/td/div/table/tbody"))/*.click()*/;
+    WebElement table =  driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_WEBELEMENT_TABLE));
     List<WebElement> rowsList = table.findElements(By.tagName("tr"));
    System.out.println("Size:"+size);
    System.out.println("Row Size:"+rowsList.size());
@@ -63,25 +67,25 @@ public class ArticleUpdate {
         LocalDateTime now = LocalDateTime.now();
         boolean checkoutFlag=false,updateVersionLink=false,submitReviewFlag=false;
         while(elementCount<4/*=articleStatusList.size()*/){
-          String article= driver.findElement(By.xpath("/html/body/div[2]/form/span[1]/span/div[5]/div[1]/div[1]/div[1]/div[2]/input[1]")).getAttribute("value");
+          String article= driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_ARTICLE_VALUE)).getAttribute("value");
           System.out.println("article"+article);
           
           if(true){
             /*next Checkout*/
             try {
-              driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[2]/span[1]/span[2]/span/button[2]")).isDisplayed();
+              driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).isDisplayed();
               checkoutFlag=true;
               System.out.println("Checkout Button Available");
             } catch (Exception e) {
               checkoutFlag=false;
               System.out.println("Checkout Button Not Available");
             }
-          if(checkoutFlag&&driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[2]/span[1]/span[2]/span/button[2]")).getText().contains("checkkout")){
-          driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[2]/span[1]/span[2]/span/button[2]")).click();
+          if(checkoutFlag&&driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).getText().contains("checkkout")){
+          driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).click();
           driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
           /*next update*/
-          if(driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/span/span/button[1]")).isDisplayed()){
-          driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/span/span/button[1]")).click();
+          if(driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_UPDATE_BUTTON)).isDisplayed()){
+          driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_UPDATE_BUTTON)).click();
           
           articleStatusList.get(elementCount).setArticleStatus("Updated-"+today.getDate());
           driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
@@ -91,7 +95,7 @@ public class ArticleUpdate {
           }
           }else{
             try {
-              driver.findElement(By.xpath("/html/body/div[2]/form/span[1]/span/div[4]/div/div/span[2]/a")).isDisplayed();
+              driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_UPDATE_VERSION_LINK)).isDisplayed();
               updateVersionLink=true;
               System.out.println("updateVersionLink Available");
 
@@ -101,10 +105,10 @@ public class ArticleUpdate {
             }
             /*updated version avail*/
             if(updateVersionLink){
-            driver.findElement(By.xpath("/html/body/div[2]/form/span[1]/span/div[4]/div/div/span[2]/a")).click();
+            driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_UPDATE_VERSION_LINK)).click();
             driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             try {
-            WebElement  submitForReview =driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[2]/span[1]/span[2]/span/button[2]"));
+            WebElement  submitForReview =driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_SUBMIT_REVIEW_BUTTON));
               
               if(submitForReview.getAttribute("value").contains("publish")){
                 submitReviewFlag=true;
@@ -119,7 +123,7 @@ public class ArticleUpdate {
             }
             /*Submit For Review*/
             if(submitReviewFlag){
-              driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[2]/span[1]/span[2]/span/button[2]")).click();
+              driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_SUBMIT_REVIEW_BUTTON)).click();
               driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
               System.out.println("submitReview Clicked");
               /*Back Button
@@ -129,8 +133,8 @@ public class ArticleUpdate {
               //rowsList.get(elementCount).findElements(By.tagName("td")).get(2).click();
             }else{
             /*Back Button*/
-            if(driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[1]/button[1]")).isDisplayed()){
-              driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[1]/button[1]")).click();
+            if(driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_BACK_BUTTON)).isDisplayed()){
+              driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_BACK_BUTTON)).click();
             }
             articleStatusList.get(elementCount).setArticleStatus("Article Submited For Review");
             driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
@@ -143,15 +147,16 @@ public class ArticleUpdate {
           }
         }
           /*next Record*/
-          if(driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[2]/span[1]/div[2]/button[2]")).isEnabled()){
+          if(driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_NEXTRECORD_BUTTON)).isEnabled()){
            
-          driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[2]/span[1]/div[2]/button[2]")).click();
+          driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_NEXTRECORD_BUTTON)).click();
           driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
           }
           elementCount++;
         }
-    
-   // driver.close();
+        articleUpdateData.setArticleStatusList(articleStatusList);
+        ArticleUpdateUtility.jaxbObjectToXML(articleUpdateData,ArticleUpdateData.class);
+    driver.close();
 
    
 

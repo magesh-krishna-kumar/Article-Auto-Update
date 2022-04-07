@@ -31,6 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+import com.travelport.articleupdate.constant.ArticleUpdateConstant;
 import com.travelport.articleupdate.impl.ArticleUpdate;
 
 public class ArticleUpdateTest {
@@ -49,7 +50,7 @@ public class ArticleUpdateTest {
   
   @Test
   public void articleUpdateTest() throws Exception {
-    String articleUri="https://travelportprod.service-now.com/nav_to.do?uri=%2Fkb_knowledge_list.do%3Fsysparm_query%3Dkb_knowledge_base%253Dbfedbd5fdbfb63804c0880c74b961923%255Evalid_toONNext%2520quarter@javascript:gs.beginningOfNextQuarter()@javascript:gs.endOfNextQuarter()%26sysparm_first_row%3D1%26sysparm_view%3D";
+    String articleUri=ArticleUpdateConstant.FILTER_URL;
     String response=ArticleUpdate.updateArticle(articleUri);
     System.out.println("response:"+response);
   }
