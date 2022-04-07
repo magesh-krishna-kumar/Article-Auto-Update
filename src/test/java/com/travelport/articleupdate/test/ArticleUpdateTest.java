@@ -51,11 +51,17 @@ public class ArticleUpdateTest {
   @Test
   public void articleUpdateTest() throws Exception {
     String articleUri=ArticleUpdateConstant.FILTER_URL;
-    String response=ArticleUpdate.updateArticle(articleUri);
+    ResourceBundle resourceBundle = ResourceBundle.getBundle("config/articledata");
+     String[] teamData = resourceBundle.getString("Travelperformance").split("-");
+
+     String emailDistribution = resourceBundle.getString(teamData[0]);
+     String[] emailData =resourceBundle.getString(teamData[1]).split("-");
+     String spocEmail = emailData[0];
+     String spocPwd = emailData[1];
+    String response=ArticleUpdate.updateArticle(articleUri,emailDistribution,spocEmail,spocPwd);
     System.out.println("response:"+response);
   }
   
- 
 
 public static void generateTextFile(String emailList)  {
   File file = new File("target/emaillist/email.txt");

@@ -11,6 +11,8 @@ public class ArticleUpdateConstant {
   public static final String XPATH_SUBMIT_REVIEW_BUTTON="/html/body/div[1]/span/span/nav/div/div[2]/span[1]/span[2]/span/button[2]";
   public static final String XPATH_BACK_BUTTON="/html/body/div[1]/span/span/nav/div/div[1]/button[1]";
   public static final String XPATH_NEXTRECORD_BUTTON="/html/body/div[1]/span/span/nav/div/div[2]/span[1]/div[2]/button[2]";
+  public static final String EMAIL_SUBJECT="*******JENKINS-ARTICLE-UPDATE***************";
+  public static String EMAIL_MESSAGE="Sample Message";
 
 
 

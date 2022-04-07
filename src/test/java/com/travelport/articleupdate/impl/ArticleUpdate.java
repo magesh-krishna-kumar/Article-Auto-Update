@@ -6,6 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.mail.MessagingException;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,8 +24,9 @@ import com.travelport.articleupdate.util.ArticleUpdateUtility;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class ArticleUpdate {
-  
-  public static String updateArticle(String articleUri) throws ClassNotFoundException{
+  private static final Logger logger = LogManager.getLogger(ArticleUpdate.class);
+
+  public static String updateArticle(String articleUri, String emailDistribution, String spocEmail, String spocPwd) throws ClassNotFoundException, MessagingException{
     String status="";
     WebDriver driver = null;
     WebDriverManager.chromedriver().setup();
@@ -38,8 +43,8 @@ public class ArticleUpdate {
     driver.switchTo().frame("gsft_main");
     WebElement table =  driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_WEBELEMENT_TABLE));
     List<WebElement> rowsList = table.findElements(By.tagName("tr"));
-   System.out.println("Size:"+size);
-   System.out.println("Row Size:"+rowsList.size());
+    logger.info("Size:"+size);
+    logger.info("Row Size:"+rowsList.size());
         List<WebElement> columnsList = null;
         for (WebElement row : rowsList) {
           if(row!=null){
@@ -68,17 +73,17 @@ public class ArticleUpdate {
         boolean checkoutFlag=false,updateVersionLink=false,submitReviewFlag=false;
         while(elementCount<4/*=articleStatusList.size()*/){
           String article= driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_ARTICLE_VALUE)).getAttribute("value");
-          System.out.println("article"+article);
+          logger.info("article"+article);
           
           if(true){
             /*next Checkout*/
             try {
               driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).isDisplayed();
               checkoutFlag=true;
-              System.out.println("Checkout Button Available");
+              logger.info("Checkout Button Available");
             } catch (Exception e) {
               checkoutFlag=false;
-              System.out.println("Checkout Button Not Available");
+              logger.info("Checkout Button Not Available");
             }
           if(checkoutFlag&&driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).getText().contains("checkkout")){
           driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).click();
@@ -97,11 +102,11 @@ public class ArticleUpdate {
             try {
               driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_UPDATE_VERSION_LINK)).isDisplayed();
               updateVersionLink=true;
-              System.out.println("updateVersionLink Available");
+              logger.info("updateVersionLink Available");
 
             } catch (Exception e) {
               updateVersionLink=false;
-              System.out.println("updateVersionLink Not Available");
+              logger.info("updateVersionLink Not Available");
             }
             /*updated version avail*/
             if(updateVersionLink){
@@ -112,20 +117,21 @@ public class ArticleUpdate {
               
               if(submitForReview.getAttribute("value").contains("publish")){
                 submitReviewFlag=true;
-                System.out.println("submitReview button Available");
+                logger.info("submitReview button Available");
               }else{
                 submitReviewFlag=false;
-                System.out.println("submitReview button Not Available");
+                logger.info("submitReview button Not Available");
               }
             } catch (Exception e) {
               submitReviewFlag=false;
-              System.out.println("submitReview button Not Available");
+              logger.info("submitReview button Not Available");
             }
             /*Submit For Review*/
             if(submitReviewFlag){
               driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_SUBMIT_REVIEW_BUTTON)).click();
               driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-              System.out.println("submitReview Clicked");
+              logger.info("submitReview Clicked");
+              articleStatusList.get(elementCount).setArticleStatus("Article Submited For Review");
               /*Back Button
               if(driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[1]/button[1]")).isDisplayed()){
                 driver.findElement(By.xpath("/html/body/div[1]/span/span/nav/div/div[1]/button[1]")).click();
@@ -136,11 +142,11 @@ public class ArticleUpdate {
             if(driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_BACK_BUTTON)).isDisplayed()){
               driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_BACK_BUTTON)).click();
             }
-            articleStatusList.get(elementCount).setArticleStatus("Article Submited For Review");
+            articleStatusList.get(elementCount).setArticleStatus("Article UptoDate");
             driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             }
             }else{
-            articleStatusList.get(elementCount).setArticleStatus("Check out Button not visible");
+            articleStatusList.get(elementCount).setArticleStatus("Check out Button & Update Link not available");
             driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             }
 
@@ -156,6 +162,7 @@ public class ArticleUpdate {
         }
         articleUpdateData.setArticleStatusList(articleStatusList);
         ArticleUpdateUtility.jaxbObjectToXML(articleUpdateData,ArticleUpdateData.class);
+        ArticleEmail.mailSetup(emailDistribution,spocEmail,spocPwd);
     driver.close();
 
    
