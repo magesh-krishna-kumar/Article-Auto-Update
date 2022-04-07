@@ -78,17 +78,17 @@
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>software.reinvent</groupId>
 			<artifactId>headless-chrome</artifactId>
 			<version>0.3.6</version>
 
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>io.github.bonigarcia</groupId>
 			<artifactId>webdrivermanager</artifactId>
-			<version>5.1.0</version>
+<version>3.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
