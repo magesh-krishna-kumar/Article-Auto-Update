@@ -71,7 +71,7 @@ public class ArticleUpdate {
         Date today = new Date();
         LocalDateTime now = LocalDateTime.now();
         boolean checkoutFlag=false,updateVersionLink=false,submitReviewFlag=false;
-        while(elementCount<4/*=articleStatusList.size()*/){
+        while(elementCount<articleStatusList.size()){
           String article= driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_ARTICLE_VALUE)).getAttribute("value");
           logger.info("article"+article);
           
@@ -85,7 +85,9 @@ public class ArticleUpdate {
               checkoutFlag=false;
               logger.info("Checkout Button Not Available");
             }
-          if(checkoutFlag&&driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).getText().contains("checkkout")){
+            if(checkoutFlag)
+            logger.info("Checkout Button Text:"+driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).getText()+":"+driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).getText().contains("Checkout"));
+          if(checkoutFlag&&driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).getText().contains("Checkout")){
           driver.findElement(By.xpath(ArticleUpdateConstant.XPATH_CHECKOUT_BUTTON)).click();
           driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
           /*next update*/
